@@ -39,10 +39,49 @@ export const todosSlice = createSlice({
   reducers: {
     deleteTodo: (state, action) => {
       return state.filter(todo => todo.id !== action.payload)
+    },
+    addTodo: (state, action) => {
+      return [...state, action.payload]
+    },
+    updateTodo: (state, action) => {
+      const { id, title, description, completed } = action.payload
+      // Utilizamos el método .map() para crear un nuevo array con el estado actualizado
+      const updatedTodos = state.map(todo => {
+        // Si encontramos el todo con el id especificado, actualizamos sus propiedades
+        if (todo.id === id) {
+          return {
+            ...todo, // Mantenemos las propiedades originales
+            title, // Actualizamos el título
+            description, // Actualizamos la descripción
+            completed // Actualizamos el estado de completado
+          }
+        }
+        // Si no es el todo que estamos buscando, devolvemos el mismo objeto sin cambios
+        return todo
+      })
+
+      return updatedTodos
+    },
+    updateTodoStatus: (state, action) => {
+      const { id, completed } = action.payload
+      // Utilizamos el método .map() para crear un nuevo array con el estado actualizado
+      const updatedTodos = state.map(todo => {
+        // Si encontramos el todo con el id especificado, actualizamos su propiedad completed
+        if (todo.id === id) {
+          return {
+            ...todo, // Mantenemos las propiedades originales
+            completed // Actualizamos el estado de completado
+          }
+        }
+        // Si no es el todo que estamos buscando, devolvemos el mismo objeto sin cambios
+        return todo
+      })
+
+      return updatedTodos
     }
   }
 })
 
 export default todosSlice.reducer
 
-export const { deleteTodo } = todosSlice.actions
+export const { deleteTodo, addTodo, updateTodo, updateTodoStatus } = todosSlice.actions
