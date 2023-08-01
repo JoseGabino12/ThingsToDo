@@ -1,33 +1,42 @@
+import { useSelector } from 'react-redux'
+import { useTodos } from './hooks/useTodos'
+import { Selector } from '@rewind-ui/core'
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+import TodoCard from './components/TodoCard'
+
+function App () {
+  const todos = useSelector((state) => state.todos)
+  const { handleDelete } = useTodos()
+
+  const [filter, setFilter] = useState('all')
+
+  const filteredTodos = filter === 'all'
+    ? todos
+    : filter === 'completed'
+      ? todos.filter((todo) => todo.completed)
+      : todos.filter((todo) => !todo.completed)
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <main className='flex flex-col items-center'>
+
+      <section className='w-80 md:w-1/2 mt-10'>
+
+        <Selector value={filter} fullWidth onChange={(value) => setFilter(value)}>
+          <Selector.Tab label='All' anchor='all' />
+          <Selector.Tab label='Completed' color='green' anchor='completed' />
+          <Selector.Tab label='Not completed' color='blue' anchor='not-completed' />
+        </Selector>
+      </section>
+
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 m-10'>
+        {
+          filteredTodos.map((todo) => (
+            <TodoCard key={todo.id} todo={todo} onToggle={handleDelete} />
+          ))
+        }
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+    </main>
   )
 }
 
