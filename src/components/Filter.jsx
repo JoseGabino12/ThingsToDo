@@ -10,7 +10,7 @@ export default function Filter ({ filter, setFilter, setOpen }) {
         <Selector.Tab label='N/C' color='blue' anchor='not-completed' />
       </Selector>
 
-      <Button className='text-lg' color='green' icon onClick={() => setOpen(true)}>
+      <Button className='text-lg dark:bg-green-700' color='green' icon onClick={() => setOpen(true)}>
         <AiOutlinePlusCircle />
       </Button>
     </section>

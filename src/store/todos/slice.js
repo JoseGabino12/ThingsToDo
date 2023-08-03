@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const initialState = [
+const DEFAUL_STATE = [
   {
     id: 1,
     title: 'Learn Redux',
@@ -32,6 +32,14 @@ const initialState = [
     description: 'Learn Redux Saga with React and Redux Toolkit'
   }
 ]
+
+const initialState = (() => {
+  // eslint-disable-next-line no-undef
+  const persistedState = localStorage.getItem('__redux__state__')
+  if (persistedState) return JSON.parse(persistedState).todos
+
+  return DEFAUL_STATE
+})()
 
 export const todosSlice = createSlice({
   name: 'todos',

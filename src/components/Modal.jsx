@@ -1,15 +1,16 @@
-import { Modal, Card, Text, Input, Button } from '@rewind-ui/core'
+import { Modal, Card, Text, Input, Button, Badge } from '@rewind-ui/core'
 import { MdCancel } from 'react-icons/md'
 
 import { useState } from 'react'
 
-export default function ModalTodo ({ open, setOpen, onToggle }) {
-  const initialState = {
+export default function ModalTodo ({ open, setOpen, onToggle, todoEdit }) {
+  const initialState = todoEdit || {
     title: '',
     description: ''
   }
 
   const [todo, setTodo] = useState(initialState)
+  const [error, setError] = useState(false)
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -21,19 +22,25 @@ export default function ModalTodo ({ open, setOpen, onToggle }) {
 
   const handleClose = () => {
     setOpen(false)
+    setError(false)
     setTodo(initialState)
   }
 
   const handleClick = () => {
+    if (!todo.title || !todo.description) {
+      setError(true)
+      return
+    }
     onToggle(todo)
     handleClose()
+    setError(false)
   }
 
   return (
     <Modal
       overlayCloseOnClick={false}
       overlayOpacity='25'
-      overlayColor='white'
+      overlayColor='gray'
       position='center'
       radius='lg'
       shadow='md'
@@ -41,7 +48,7 @@ export default function ModalTodo ({ open, setOpen, onToggle }) {
       open={open}
       onClose={handleClose}
     >
-      <Card className='w-full'>
+      <Card className='w-full dark:bg-[#c1c1c2] dark:border-none dark:text-white dark:divide-none'>
         <Card.Header
           actions={
             <Button onClick={handleClose} size='sm' tone='transparent' icon className='text-xl text-red-500'>
@@ -49,7 +56,7 @@ export default function ModalTodo ({ open, setOpen, onToggle }) {
             </Button>
           }
         >
-          <Text as='h1' weight='bold' className='mt-5'>Add a new todo</Text>
+          <Text as='h1' weight='bold' className='mt-5 text-lg'>Add a new todo</Text>
         </Card.Header>
         <Card.Body className='max-h-[300px] overflow-auto space-y-2'>
           <div>
@@ -62,12 +69,16 @@ export default function ModalTodo ({ open, setOpen, onToggle }) {
             <Input placeholder='Description' name='description' value={todo.description} onChange={handleChange} />
           </div>
         </Card.Body>
-        <Card.Footer className='self-end'>
+        <Card.Footer className='flex justify-end gap-2'>
+          <div className='w-full'>
+            {error && <Badge color='red' tone='light' className='p-2 dark:bg-red-500 dark:text-white'>Please fill all the fields</Badge>}
+          </div>
           <Button
             onClick={handleClick}
             shadow='base'
             color='green'
             icon
+            className='px-5'
           >
             Add
           </Button>
