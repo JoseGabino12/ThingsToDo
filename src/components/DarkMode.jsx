@@ -2,7 +2,7 @@ import { Selector, Text } from '@rewind-ui/core'
 import { BsMoonStars, BsSun } from 'react-icons/bs'
 
 export default function DarkMode () {
-  const isDark = document.body.classList.contains('dark')
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
 
   return (
     <header className='p-5 w-full flex justify-between items-center'>
